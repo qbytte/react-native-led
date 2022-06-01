@@ -1,16 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Image, TouchableOpacity } from "react-native-web";
+
+const fetchData = () => {
+  return fetch("https://arduino-test-dd484-default-rtdb.firebaseio.com/test/led.json")
+    .then((response) => response.json())
+    .then((json) => json.status)
+    .catch((error) => console.error(error));
+};
 
 const Bulb = () => {
   const [isLit, setIsLit] = useState(false);
 
+  useEffect(async () => {
+    const led = await fetchData();
+    setIsLit(led);
+    console.log(led);
+  }, []);
+
   return (
-    <TouchableOpacity 
-        onPress={() => {
-            setIsLit(!isLit)
-        }}
-        style={styles.container}>
-      <Image style={styles.img} source={isLit ? require("../img/Off.png") : require("../img/On.png")} />
+    <TouchableOpacity
+      onPress={async () => {
+        
+        await fetch("https://arduino-test-dd484-default-rtdb.firebaseio.com/test/led/.json", {
+          method: "PATCH",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: !isLit
+          })
+        });
+        const led = await fetchData();
+        setIsLit(led);
+      }}
+      style={styles.container}
+    >
+      <Image
+        style={styles.img}
+        source={isLit ? require("../img/On.png") : require("../img/Off.png")}
+      />
     </TouchableOpacity>
   );
 };
@@ -21,7 +50,7 @@ const styles = StyleSheet.create({
     height: 400,
   },
   img: {
-    height: '100%'
+    height: "100%",
   },
 });
 
