@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Image, TouchableOpacity } from "react-native-web";
 
 const fetchData = () => {
-  return fetch("https://arduino-test-dd484-default-rtdb.firebaseio.com/test/led.json")
+  return fetch("https://arduino-led-48439-default-rtdb.firebaseio.com/led.json")
     .then((response) => response.json())
     .then((json) => json.status)
     .catch((error) => console.error(error));
@@ -21,7 +21,7 @@ const Bulb = () => {
     <TouchableOpacity
       onPress={async () => {
         
-        await fetch("https://arduino-test-dd484-default-rtdb.firebaseio.com/test/led/.json", {
+        await fetch("https://arduino-led-48439-default-rtdb.firebaseio.com/led/.json", {
           method: "PATCH",
           headers: {
             Accept: "application/json",
