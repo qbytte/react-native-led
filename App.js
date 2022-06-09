@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { Bulb } from './src/components/bulb';
+import { Bulb } from './src/components/Bulb';
 
 export default function App() {
   return (

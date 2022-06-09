@@ -1,15 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Image, TouchableOpacity } from "react-native-web";
 
-const fetchData = () => {
-  return fetch("https://arduino-led-48439-default-rtdb.firebaseio.com/led.json")
-    .then((response) => response.json())
-    .then((json) => json.status)
-    .catch((error) => console.error(error));
-};
-
 const Bulb = () => {
   const [isLit, setIsLit] = useState(false);
+
+  const fetchData = () => {
+    return fetch(
+      "https://arduino-led-48439-default-rtdb.firebaseio.com/led.json"
+    )
+      .then((response) => response.json())
+      .then((json) => json.status)
+      .catch((error) => console.error(error));
+  };
+
+  const handlePress = async () => {
+    await fetch(
+      "https://arduino-led-48439-default-rtdb.firebaseio.com/led/.json",
+      {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: !isLit,
+        }),
+      }
+    );
+    const led = await fetchData();
+    setIsLit(led);
+  };
 
   useEffect(async () => {
     const led = await fetchData();
@@ -18,24 +38,7 @@ const Bulb = () => {
   }, []);
 
   return (
-    <TouchableOpacity
-      onPress={async () => {
-        
-        await fetch("https://arduino-led-48439-default-rtdb.firebaseio.com/led/.json", {
-          method: "PATCH",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: !isLit
-          })
-        });
-        const led = await fetchData();
-        setIsLit(led);
-      }}
-      style={styles.container}
-    >
+    <TouchableOpacity onPress={handlePress} style={styles.container}>
       <Image
         style={styles.img}
         source={isLit ? require("../img/On.png") : require("../img/Off.png")}
