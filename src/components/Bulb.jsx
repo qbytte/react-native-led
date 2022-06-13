@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Image, TouchableOpacity } from "react-native-web";
+import { StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const Bulb = () => {
   const [isLit, setIsLit] = useState(false);
@@ -31,10 +31,14 @@ const Bulb = () => {
     setIsLit(led);
   };
 
-  useEffect(async () => {
-    const led = await fetchData();
-    setIsLit(led);
-    console.log(led);
+  
+
+  useEffect(() => {
+    (async () => {
+      const led = await fetchData();
+      setIsLit(led);
+      console.log(led);
+    })()
   }, []);
 
   return (
@@ -54,6 +58,7 @@ const styles = StyleSheet.create({
   },
   img: {
     height: "100%",
+    width:"100%"
   },
 });
 
